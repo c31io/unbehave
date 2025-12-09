@@ -3,6 +3,7 @@ import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vitest/config';
 import { playwright } from '@vitest/browser-playwright';
 import { sveltekit } from '@sveltejs/kit/vite';
+import { SvelteKitPWA } from '@vite-pwa/sveltekit';
 
 export default defineConfig({
 	plugins: [
@@ -11,6 +12,36 @@ export default defineConfig({
 		paraglideVitePlugin({
 			project: './project.inlang',
 			outdir: './src/lib/paraglide'
+		}),
+		SvelteKitPWA({
+			registerType: 'autoUpdate',
+			devOptions: {
+				enabled: true
+			},
+			manifest: {
+				name: 'Unbehave - To Not Is To Do',
+				short_name: 'Unbehave',
+				description: 'A local-first PWA for behavioral intervention through regret-based decision making',
+				theme_color: '#000000',
+				background_color: '#ffffff',
+				display: 'standalone',
+				start_url: '/',
+				icons: [
+					{
+						src: '/icon-192.svg',
+						sizes: '192x192',
+						type: 'image/svg+xml'
+					},
+					{
+						src: '/icon-512.svg',
+						sizes: '512x512',
+						type: 'image/svg+xml'
+					}
+				]
+			},
+			workbox: {
+				globPatterns: ['**/*.{js,css,html,svg,png,ico,woff,woff2}']
+			}
 		})
 	],
 	test: {
