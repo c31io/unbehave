@@ -80,8 +80,8 @@
 					></textarea>
 				</div>
 
-				<div>
-					<label class="mb-2 block text-sm font-semibold">Severity</label>
+				<fieldset>
+					<legend class="mb-2 block text-sm font-semibold">Severity</legend>
 					<div class="flex gap-4">
 						<label class="flex items-center gap-2">
 							<input
@@ -111,7 +111,7 @@
 							<span>High</span>
 						</label>
 					</div>
-				</div>
+				</fieldset>
 
 				<div>
 					<label for="tags" class="mb-2 block text-sm font-semibold">Tags (optional)</label>
