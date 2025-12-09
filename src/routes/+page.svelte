@@ -6,22 +6,25 @@
 	let showRegrets = $state(false);
 	let selectedRegrets = $state<string[]>([]);
 
-	const highSeverityRegrets = $derived(
-		appState.regrets.filter((r) => r.severity === 'high').slice(0, 3)
+	const sortedRegrets = $derived(
+		appState.regrets
+			.sort((a, b) => {
+				const severityOrder = { high: 0, medium: 1, low: 2 };
+				return severityOrder[a.severity] - severityOrder[b.severity];
+			})
+			.slice(0, 5)
 	);
 
 	function handleResist() {
-		if (selectedRegrets.length > 0) {
-			appState.recordEvent({
-				id: generateId(),
-				temptationId: 'general',
-				timestamp: Date.now(),
-				resisted: true,
-				regretsViewed: selectedRegrets
-			});
-			selectedRegrets = [];
-			showRegrets = false;
-		}
+		appState.recordEvent({
+			id: generateId(),
+			temptationId: 'general',
+			timestamp: Date.now(),
+			resisted: true,
+			regretsViewed: [...selectedRegrets]
+		});
+		selectedRegrets = [];
+		showRegrets = false;
 	}
 
 	function handleGaveIn() {
@@ -30,7 +33,7 @@
 			temptationId: 'general',
 			timestamp: Date.now(),
 			resisted: false,
-			regretsViewed: selectedRegrets
+			regretsViewed: [...selectedRegrets]
 		});
 		selectedRegrets = [];
 		showRegrets = false;
@@ -125,7 +128,7 @@
 					</div>
 				{:else}
 					<div class="mb-6 space-y-4">
-						{#each highSeverityRegrets as regret (regret.id)}
+						{#each sortedRegrets as regret (regret.id)}
 							<button
 								onclick={() => toggleRegret(regret.id)}
 								class="w-full rounded-lg border-2 p-6 text-left transition-all {selectedRegrets.includes(

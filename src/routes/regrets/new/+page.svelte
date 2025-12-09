@@ -36,7 +36,7 @@
 			description: description.trim(),
 			timestamp: Date.now(),
 			severity,
-			tags
+			tags: [...tags]
 		};
 
 		await appState.addRegret(regret);
