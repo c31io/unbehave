@@ -2,6 +2,13 @@
 
 To not is to do.
 
+## Todos
+
+- Icons
+- Labels and foldable suggestions
+- Guide new users
+- About page in the footer
+
 ## The philosophy
 
 It had many names: Wu Wei/Via Negativa/The Inversion Principle/Addition by Subtraction/Minimalism/...
