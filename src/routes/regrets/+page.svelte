@@ -17,7 +17,7 @@
 	<nav class="border-b border-gray-700 bg-gray-900/50 backdrop-blur">
 		<div class="container mx-auto px-4 py-4">
 			<div class="flex items-center justify-between">
-				<a href="/" class="text-2xl font-bold hover:text-gray-300">← Unbehave</a>
+				<a href="/" class="text-2xl font-bold hover:text-gray-300">← unbehave</a>
 			</div>
 		</div>
 	</nav>

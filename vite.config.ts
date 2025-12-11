@@ -19,8 +19,8 @@ export default defineConfig({
 				enabled: true
 			},
 			manifest: {
-				name: 'Unbehave - To Not Is To Do',
-				short_name: 'Unbehave',
+				name: 'unbehave - To not is to do',
+				short_name: 'unbehave',
 				description: 'A local-first PWA for behavioral intervention through regret-based decision making',
 				theme_color: '#000000',
 				background_color: '#ffffff',

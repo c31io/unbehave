@@ -52,7 +52,7 @@
 	<nav class="border-b border-gray-700 bg-gray-900/50 backdrop-blur">
 		<div class="container mx-auto px-4 py-4">
 			<div class="flex items-center justify-between">
-				<h1 class="text-2xl font-bold">Unbehave</h1>
+				<h1 class="text-2xl font-bold">unbehave</h1>
 				<div class="flex gap-4">
 					<a href="/regrets" class="hover:text-gray-300">My Regrets</a>
 					<a href="/stats" class="hover:text-gray-300">Stats</a>

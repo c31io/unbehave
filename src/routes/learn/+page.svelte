@@ -1,7 +1,7 @@
 <div class="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
 	<nav class="border-b border-gray-700 bg-gray-900/50 backdrop-blur">
 		<div class="container mx-auto px-4 py-4">
-			<a href="/" class="text-2xl font-bold hover:text-gray-300">← Unbehave</a>
+			<a href="/" class="text-2xl font-bold hover:text-gray-300">← unbehave</a>
 		</div>
 	</nav>
 
@@ -66,7 +66,7 @@
 			<ul>
 				<li>
 					<strong>IF</strong> I feel the urge to check social media, <strong>THEN</strong> I'll open
-					Unbehave and review my regrets
+					unbehave and review my regrets
 				</li>
 				<li>
 					<strong>IF</strong> I'm tempted to play games all day, <strong>THEN</strong> I'll read my
