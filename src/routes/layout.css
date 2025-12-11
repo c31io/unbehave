@@ -1,3 +1,9 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+
+html,
+body {
+	background-color: rgb(17 24 39);
+	min-height: 100vh;
+}
