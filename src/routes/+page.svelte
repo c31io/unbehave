@@ -89,7 +89,7 @@
 				{#if appState.stats.totalTemptations > 0}
 					<div class="mt-12 rounded-lg bg-gray-800/50 p-6">
 						<h3 class="mb-4 text-2xl font-bold">Your Progress</h3>
-						<div class="grid gap-4 sm:grid-cols-3">
+						<div class="grid grid-cols-3 gap-4">
 							<div>
 								<div class="text-3xl font-bold text-green-400">
 									{appState.stats.totalResisted}
