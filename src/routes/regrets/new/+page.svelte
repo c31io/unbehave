@@ -84,13 +84,13 @@
 					></textarea>
 				</div>
 
-				<div>
-					<label class="mb-2 block text-sm font-semibold">
+				<fieldset>
+					<legend class="mb-2 block text-sm font-semibold">
 						Severity
 						<span class="ml-2 text-xs font-normal text-gray-400">Current: {severity}</span>
-					</label>
+					</legend>
 					<SeverityRating value={severity} interactive={true} onchange={(val) => (severity = val)} size="lg" />
-				</div>
+				</fieldset>
 
 				<div>
 					<label for="addiction" class="mb-2 block text-sm font-semibold">
