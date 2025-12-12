@@ -2,17 +2,13 @@
 	import { appState } from '$lib/stores/app.svelte';
 	import { generateId } from '$lib/utils';
 	import type { Regret } from '$lib/types';
+	import SeverityRating from '$lib/components/SeverityRating.svelte';
 
 	let showRegrets = $state(false);
 	let selectedRegrets = $state<string[]>([]);
 
 	const sortedRegrets = $derived(
-		appState.regrets
-			.sort((a, b) => {
-				const severityOrder = { high: 0, medium: 1, low: 2 };
-				return severityOrder[a.severity] - severityOrder[b.severity];
-			})
-			.slice(0, 5)
+		[...appState.regrets].sort((a, b) => b.severity - a.severity).slice(0, 5)
 	);
 
 	function handleResist() {
@@ -139,16 +135,8 @@
 							>
 								<h3 class="mb-2 text-xl font-bold">{regret.title}</h3>
 								<p class="text-gray-300">{regret.description}</p>
-								<div class="mt-3 flex items-center gap-2">
-									<span
-										class="rounded px-2 py-1 text-sm {regret.severity === 'high'
-											? 'bg-red-900/50 text-red-300'
-											: regret.severity === 'medium'
-												? 'bg-yellow-900/50 text-yellow-300'
-												: 'bg-gray-700 text-gray-300'}"
-									>
-										{regret.severity}
-									</span>
+								<div class="mt-3 flex items-center gap-3">
+									<SeverityRating value={regret.severity} size="sm" />
 									{#each regret.tags as tag}
 										<span class="rounded bg-gray-700 px-2 py-1 text-sm">{tag}</span>
 									{/each}

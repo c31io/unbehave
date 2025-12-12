@@ -5,10 +5,11 @@
 	import { goto } from '$app/navigation';
 	import { predefinedAddictions, getUserAddictions } from '$lib/addictions';
 	import { onMount } from 'svelte';
+	import SeverityRating from '$lib/components/SeverityRating.svelte';
 
 	let title = $state('');
 	let description = $state('');
-	let severity = $state<'low' | 'medium' | 'high'>('medium');
+	let severity = $state(5);
 	let selectedAddiction = $state('');
 	let showTreatment = $state(false);
 	let userAddictions = $state<string[]>([]);
@@ -83,38 +84,13 @@
 					></textarea>
 				</div>
 
-				<fieldset>
-					<legend class="mb-2 block text-sm font-semibold">Severity</legend>
-					<div class="flex gap-4">
-						<label class="flex items-center gap-2">
-							<input
-								type="radio"
-								bind:group={severity}
-								value="low"
-								class="h-4 w-4 text-blue-600"
-							/>
-							<span>Low</span>
-						</label>
-						<label class="flex items-center gap-2">
-							<input
-								type="radio"
-								bind:group={severity}
-								value="medium"
-								class="h-4 w-4 text-blue-600"
-							/>
-							<span>Medium</span>
-						</label>
-						<label class="flex items-center gap-2">
-							<input
-								type="radio"
-								bind:group={severity}
-								value="high"
-								class="h-4 w-4 text-blue-600"
-							/>
-							<span>High</span>
-						</label>
-					</div>
-				</fieldset>
+				<div>
+					<label class="mb-2 block text-sm font-semibold">
+						Severity
+						<span class="ml-2 text-xs font-normal text-gray-400">Current: {severity}</span>
+					</label>
+					<SeverityRating value={severity} interactive={true} onchange={(val) => (severity = val)} size="lg" />
+				</div>
 
 				<div>
 					<label for="addiction" class="mb-2 block text-sm font-semibold">
@@ -175,7 +151,7 @@
 							onchange={() => (showTreatment = false)}
 							class="w-full rounded-lg border border-gray-600 bg-gray-800 px-4 py-3 text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
 						>
-							<option value="">None / Not applicable</option>
+							<option value="">None</option>
 							{#each userAddictions as addictionId}
 								{@const addiction = predefinedAddictions.find((a) => a.id === addictionId)}
 								{#if addiction}

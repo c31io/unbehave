@@ -3,7 +3,7 @@ export interface Regret {
 	title: string;
 	description: string;
 	timestamp: number;
-	severity: 'low' | 'medium' | 'high';
+	severity: number;
 	tags: string[];
 	relatedTemptation?: string;
 }

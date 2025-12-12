@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { appState } from '$lib/stores/app.svelte';
 	import { formatRelativeTime } from '$lib/utils';
+	import SeverityRating from '$lib/components/SeverityRating.svelte';
 
 	const sortedRegrets = $derived(
 		[...appState.regrets].sort((a, b) => b.timestamp - a.timestamp)
@@ -77,16 +78,8 @@
 
 							<p class="mb-4 text-gray-300">{regret.description}</p>
 
-							<div class="flex items-center gap-2">
-								<span
-									class="rounded px-2 py-1 text-sm {regret.severity === 'high'
-										? 'bg-red-900/50 text-red-300'
-										: regret.severity === 'medium'
-											? 'bg-yellow-900/50 text-yellow-300'
-											: 'bg-gray-700 text-gray-300'}"
-								>
-									{regret.severity}
-								</span>
+							<div class="flex items-center gap-3">
+								<SeverityRating value={regret.severity} size="sm" />
 								{#each regret.tags as tag}
 									<span class="rounded bg-gray-700 px-2 py-1 text-sm">{tag}</span>
 								{/each}

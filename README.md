@@ -4,7 +4,6 @@ To not is to do.
 
 ## Todos
 
-- Labels and foldable suggestions
 - Guide new users
 - About page in the footer
 - State import/export
