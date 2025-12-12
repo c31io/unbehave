@@ -4,9 +4,8 @@ To not is to do.
 
 ## Todos
 
-- Guide new users
-- About page in the footer
 - State import/export
+- i18n
 
 ## The philosophy
 

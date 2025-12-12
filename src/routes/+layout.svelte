@@ -3,6 +3,7 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import { appState } from '$lib/stores/app.svelte';
 	import { onMount } from 'svelte';
+	import Footer from '$lib/components/Footer.svelte';
 
 	let { children } = $props();
 
@@ -259,4 +260,5 @@
 
 <div class="{showInstallBanner ? 'pt-[72px]' : ''}">
 	{@render children()}
+	<Footer />
 </div>
