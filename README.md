@@ -4,10 +4,10 @@ To not is to do.
 
 ## Todos
 
-- Icons
 - Labels and foldable suggestions
 - Guide new users
 - About page in the footer
+- State import/export
 
 ## The philosophy
 
