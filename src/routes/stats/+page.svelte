@@ -24,7 +24,7 @@
 		<div class="mx-auto max-w-4xl">
 			<h1 class="mb-8 text-4xl font-bold">Your Stats</h1>
 
-			<div class="mb-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+			<div class="mb-8 grid grid-cols-2 gap-6 lg:grid-cols-4">
 				<div class="rounded-lg bg-gray-800/50 p-6">
 					<div class="text-3xl font-bold text-blue-400">{appState.stats.totalTemptations}</div>
 					<div class="text-gray-400">Total Temptations</div>
