@@ -3,9 +3,12 @@
 	import { generateId } from '$lib/utils';
 	import type { Regret } from '$lib/types';
 	import { goto } from '$app/navigation';
-	import { predefinedAddictions, getUserAddictions } from '$lib/addictions';
+	import { predefinedAddictions, getUserAddictions, getAddictionName } from '$lib/addictions';
 	import { onMount } from 'svelte';
 	import SeverityRating from '$lib/components/SeverityRating.svelte';
+	import { localizeHref } from '$lib/paraglide/runtime';
+	import * as m from '$lib/paraglide/messages';
+	import { markdownToHtml } from '$lib/utils/markdown';
 
 	let title = $state('');
 	let description = $state('');
@@ -30,7 +33,7 @@
 		e.preventDefault();
 
 		if (!title.trim() || !description.trim()) {
-			alert('Please fill in both title and description');
+			alert(m.new_regret_fill_required_alert());
 			return;
 		}
 
@@ -44,40 +47,40 @@
 		};
 
 		await appState.addRegret(regret);
-		goto('/regrets');
+		goto(localizeHref('/regrets'));
 	}
 </script>
 
 <div class="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
 	<nav class="border-b border-gray-700 bg-gray-900/50 backdrop-blur">
 		<div class="container mx-auto px-4 py-4">
-			<a href="/regrets" class="text-2xl font-bold hover:text-gray-300">← Back to Regrets</a>
+			<a href={localizeHref('/regrets')} class="text-2xl font-bold hover:text-gray-300">← {m.new_regret_back_link()}</a>
 		</div>
 	</nav>
 
 	<main class="container mx-auto px-4 py-12">
 		<div class="mx-auto max-w-2xl">
-			<h1 class="mb-8 text-4xl font-bold">Add a New Regret</h1>
+			<h1 class="mb-8 text-4xl font-bold">{m.new_regret_page_title()}</h1>
 
 			<form onsubmit={handleSubmit} class="space-y-6">
 				<div>
-					<label for="title" class="mb-2 block text-sm font-semibold">Title</label>
+					<label for="title" class="mb-2 block text-sm font-semibold">{m.new_regret_title_label()}</label>
 					<input
 						id="title"
 						type="text"
 						bind:value={title}
-						placeholder="e.g., Wasted 4 hours on social media"
+						placeholder={m.new_regret_title_placeholder()}
 						class="w-full rounded-lg border border-gray-600 bg-gray-800 px-4 py-3 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
 						required
 					/>
 				</div>
 
 				<div>
-					<label for="description" class="mb-2 block text-sm font-semibold">Description</label>
+					<label for="description" class="mb-2 block text-sm font-semibold">{m.new_regret_description_label()}</label>
 					<textarea
 						id="description"
 						bind:value={description}
-						placeholder="Describe what happened and how you felt..."
+						placeholder={m.new_regret_description_placeholder()}
 						rows="6"
 						class="w-full rounded-lg border border-gray-600 bg-gray-800 px-4 py-3 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
 						required
@@ -86,24 +89,23 @@
 
 				<fieldset>
 					<legend class="mb-2 block text-sm font-semibold">
-						Severity
-						<span class="ml-2 text-xs font-normal text-gray-400">Current: {severity}</span>
+						{m.new_regret_severity_label()}
+						<span class="ml-2 text-xs font-normal text-gray-400">{m.new_regret_severity_current({ value: severity })}</span>
 					</legend>
 					<SeverityRating value={severity} interactive={true} onchange={(val) => (severity = val)} size="lg" />
 				</fieldset>
 
 				<div>
 					<label for="addiction" class="mb-2 block text-sm font-semibold">
-						Choose addiction label
+						{m.new_regret_addiction_label()}
 						{#if userAddictions.length === 0}
-							<span class="ml-2 text-xs text-gray-400">(Setup your list first)</span>
+							<span class="ml-2 text-xs text-gray-400">{m.new_regret_setup_first()}</span>
 						{/if}
 					</label>
 					{#if showAddictionSetup}
 						<div class="mb-4 rounded-lg border-2 border-blue-600 bg-blue-900/20 p-4">
 							<p class="mb-3 text-sm text-blue-300">
-								Select the addictions/temptations you want to track. You can always change this
-								later.
+								{m.new_regret_setup_intro()}
 							</p>
 							<div class="grid gap-2 sm:grid-cols-2">
 								{#each predefinedAddictions as addiction}
@@ -123,7 +125,7 @@
 											class="h-4 w-4 rounded border-gray-500 text-blue-600 focus:ring-2 focus:ring-blue-500"
 										/>
 										<span class="text-2xl">{addiction.emoji}</span>
-										<span class="flex-1 text-sm font-medium">{addiction.name}</span>
+										<span class="flex-1 text-sm font-medium">{getAddictionName(addiction.id)}</span>
 									</label>
 								{/each}
 							</div>
@@ -136,12 +138,12 @@
 										});
 										showAddictionSetup = false;
 									} else {
-										alert('Please select at least one addiction to track');
+										alert(m.new_regret_select_one_alert());
 									}
 								}}
 								class="mt-3 w-full rounded-lg bg-blue-600 px-4 py-2 font-semibold hover:bg-blue-700"
 							>
-								Save My List
+								{m.new_regret_save_list()}
 							</button>
 						</div>
 					{:else}
@@ -151,12 +153,12 @@
 							onchange={() => (showTreatment = false)}
 							class="w-full rounded-lg border border-gray-600 bg-gray-800 px-4 py-3 text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
 						>
-							<option value="">None</option>
+							<option value="">{m.new_regret_none_option()}</option>
 							{#each userAddictions as addictionId}
 								{@const addiction = predefinedAddictions.find((a) => a.id === addictionId)}
 								{#if addiction}
 									<option value={addiction.id}>
-										{addiction.emoji} {addiction.name}
+										{addiction.emoji} {getAddictionName(addiction.id)}
 									</option>
 								{/if}
 							{/each}
@@ -166,7 +168,7 @@
 							onclick={() => (showAddictionSetup = true)}
 							class="mt-2 text-sm text-blue-400 hover:text-blue-300"
 						>
-							⚙️ Manage my addiction list
+							{m.new_regret_manage_list()}
 						</button>
 					{/if}
 				</div>
@@ -181,7 +183,7 @@
 							<div class="flex items-center gap-3">
 								<span class="text-2xl">{selectedAddictionData.emoji}</span>
 								<span class="font-semibold">
-									Treatment Guide: {selectedAddictionData.name}
+									{m.new_regret_treatment_guide({ name: getAddictionName(selectedAddictionData.id) })}
 								</span>
 							</div>
 							<span class="text-2xl text-gray-400">{showTreatment ? '−' : '+'}</span>
@@ -189,17 +191,7 @@
 						{#if showTreatment}
 							<div class="border-t border-gray-700 p-4">
 								<div class="prose prose-invert prose-sm max-w-none">
-									{@html selectedAddictionData.treatment
-										.split('\n')
-										.map((line) => {
-											if (line.startsWith('## ')) return `<h2 class="text-xl font-bold mb-3 text-white">${line.slice(3)}</h2>`;
-											if (line.startsWith('### ')) return `<h3 class="text-lg font-semibold mb-2 text-blue-300">${line.slice(4)}</h3>`;
-											if (line.startsWith('**') && line.endsWith('**')) return `<p class="font-bold text-gray-200 mb-2">${line.slice(2, -2)}</p>`;
-											if (line.startsWith('- ')) return `<li class="ml-4 text-gray-300">${line.slice(2)}</li>`;
-											if (line.trim() === '') return '<br/>';
-											return `<p class="text-gray-300 mb-2">${line}</p>`;
-										})
-										.join('')}
+									{@html markdownToHtml(selectedAddictionData.treatment)}
 								</div>
 							</div>
 						{/if}
@@ -211,13 +203,13 @@
 						type="submit"
 						class="flex-1 rounded-lg bg-blue-600 px-6 py-3 font-semibold hover:bg-blue-700"
 					>
-						Save Regret
+						{m.new_regret_submit_button()}
 					</button>
 					<a
-						href="/regrets"
+						href={localizeHref('/regrets')}
 						class="flex-1 rounded-lg border border-gray-600 px-6 py-3 text-center font-semibold hover:bg-gray-800"
 					>
-						Cancel
+						{m.new_regret_cancel_button()}
 					</a>
 				</div>
 			</form>

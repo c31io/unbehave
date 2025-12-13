@@ -2,6 +2,8 @@
 	import { appState } from '$lib/stores/app.svelte';
 	import { formatRelativeTime } from '$lib/utils';
 	import SeverityRating from '$lib/components/SeverityRating.svelte';
+	import * as m from '$lib/paraglide/messages';
+	import { localizeHref } from '$lib/paraglide/runtime';
 
 	const sortedRegrets = $derived(
 		[...appState.regrets].sort((a, b) => b.timestamp - a.timestamp)
@@ -11,7 +13,7 @@
 	let importMode = $state<'merge' | 'replace'>('merge');
 
 	async function deleteRegret(id: string) {
-		if (confirm('Are you sure you want to delete this regret?')) {
+		if (confirm(m.regrets_delete_confirm())) {
 			await appState.deleteRegret(id);
 		}
 	}
@@ -28,7 +30,7 @@
 			a.click();
 			URL.revokeObjectURL(url);
 		} catch (error) {
-			alert('Failed to export data: ' + (error as Error).message);
+			alert(m.regrets_export_failed({ error: (error as Error).message }));
 		}
 	}
 
@@ -64,9 +66,9 @@
 					const jsonData = e.target?.result as string;
 					await appState.importData(jsonData, importMode);
 					showImportModal = false;
-					alert('Data imported successfully!');
+					alert(m.regrets_import_success());
 				} catch (error) {
-					alert('Failed to import data: ' + (error as Error).message);
+					alert(m.regrets_import_failed({ error: (error as Error).message }));
 				}
 			};
 			reader.readAsText(file);
@@ -78,7 +80,7 @@
 	<nav class="border-b border-gray-700 bg-gray-900/50 backdrop-blur">
 		<div class="container mx-auto px-4 py-4">
 			<div class="flex items-center justify-between">
-				<a href="/" class="text-2xl font-bold hover:text-gray-300">← unbehave</a>
+				<a href={localizeHref('/')} class="text-2xl font-bold hover:text-gray-300">← {m.app_name()}</a>
 			</div>
 		</div>
 	</nav>
@@ -86,42 +88,42 @@
 	<main class="container mx-auto px-4 py-12">
 		<div class="mx-auto max-w-4xl">
 			<div class="mb-8 flex items-center justify-between">
-				<h1 class="text-4xl font-bold">My Regrets</h1>
+				<h1 class="text-4xl font-bold">{m.regrets_page_title()}</h1>
 				<div class="flex gap-2">
 					<button
 						onclick={exportData}
 						class="rounded-lg border border-gray-600 px-4 py-2 text-sm font-semibold hover:bg-gray-800"
-						title="Export all data"
+						title={m.export_button_title()}
 					>
-						📥 Export
+						📥 {m.regrets_export_button()}
 					</button>
 					<button
 						onclick={openImportDialog}
 						class="rounded-lg border border-gray-600 px-4 py-2 text-sm font-semibold hover:bg-gray-800"
-						title="Import data from file"
+						title={m.import_button_title()}
 					>
-						📤 Import
+						📤 {m.regrets_import_button()}
 					</button>
 					<a
-						href="/regrets/new"
+						href={localizeHref('/regrets/new')}
 						class="rounded-lg bg-blue-600 px-6 py-3 font-semibold hover:bg-blue-700"
 					>
-						Add New
+						{m.regrets_add_new_button()}
 					</a>
 				</div>
 			</div>
 
 			{#if sortedRegrets.length === 0}
 				<div class="rounded-lg bg-gray-800/50 p-12 text-center">
-					<h2 class="mb-4 text-2xl font-bold text-gray-300">No regrets yet</h2>
+					<h2 class="mb-4 text-2xl font-bold text-gray-300">{m.regrets_empty_title()}</h2>
 					<p class="mb-6 text-gray-400">
-						Start by documenting moments you want to remember when tempted.
+						{m.regrets_empty_description()}
 					</p>
 					<a
-						href="/regrets/new"
+						href={localizeHref('/regrets/new')}
 						class="inline-block rounded-lg bg-blue-600 px-6 py-3 font-semibold hover:bg-blue-700"
 					>
-						Add Your First Regret
+						{m.regrets_add_first_button()}
 					</a>
 				</div>
 			{:else}
@@ -133,7 +135,7 @@
 								<button
 									onclick={() => deleteRegret(regret.id)}
 									class="text-gray-400 hover:text-red-400"
-									aria-label="Delete regret"
+									aria-label={m.regrets_delete_aria_label()}
 								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
@@ -177,15 +179,15 @@
 			onkeydown={handleBackdropKeydown}
 			role="button"
 			tabindex="0"
-			aria-label="Close import dialog"
+			aria-label={m.import_modal_close_aria_label()}
 		>
 			<div
 				class="mx-4 w-full max-w-md rounded-lg border border-gray-700 bg-gray-900 p-6 shadow-xl"
 			>
-				<h2 class="mb-4 text-2xl font-bold">Import Data</h2>
+				<h2 class="mb-4 text-2xl font-bold">{m.import_modal_title()}</h2>
 
 				<fieldset class="mb-6">
-					<legend class="mb-3 text-sm font-semibold text-gray-300">Import Mode</legend>
+					<legend class="mb-3 text-sm font-semibold text-gray-300">{m.import_modal_mode_legend()}</legend>
 					<div class="space-y-3">
 						<label class="flex cursor-pointer items-start gap-3 rounded-lg border border-gray-600 bg-gray-800 p-3 transition-colors hover:border-gray-500">
 							<input
@@ -196,9 +198,9 @@
 								class="mt-1 h-4 w-4 border-gray-500 text-blue-600 focus:ring-2 focus:ring-blue-500"
 							/>
 							<div class="flex-1">
-								<div class="font-semibold">Merge</div>
+								<div class="font-semibold">{m.import_modal_merge_title()}</div>
 								<div class="text-sm text-gray-400">
-									Add imported data to existing data (recommended)
+									{m.import_modal_merge_description()}
 								</div>
 							</div>
 						</label>
@@ -212,9 +214,9 @@
 								class="mt-1 h-4 w-4 border-gray-500 text-blue-600 focus:ring-2 focus:ring-blue-500"
 							/>
 							<div class="flex-1">
-								<div class="font-semibold">Replace</div>
+								<div class="font-semibold">{m.import_modal_replace_title()}</div>
 								<div class="text-sm text-gray-400">
-									Delete all existing data and replace with imported data
+									{m.import_modal_replace_description()}
 								</div>
 							</div>
 						</label>
@@ -233,7 +235,7 @@
 						onclick={closeImportModal}
 						class="flex-1 rounded-lg border border-gray-600 px-4 py-2 font-semibold hover:bg-gray-800"
 					>
-						Cancel
+						{m.import_modal_cancel_button()}
 					</button>
 				</div>
 			</div>

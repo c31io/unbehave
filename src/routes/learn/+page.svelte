@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
+	import { localizeHref } from '$lib/paraglide/runtime';
 
 	onMount(() => {
-		goto('/learn/science', { replaceState: true });
+		goto(localizeHref('/learn/science'), { replaceState: true });
 	});
 </script>
