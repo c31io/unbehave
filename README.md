@@ -2,10 +2,6 @@
 
 To not is to do.
 
-## Todos
-
-- i18n
-
 ## The philosophy
 
 It had many names: Wu Wei/Via Negativa/The Inversion Principle/Addition by Subtraction/Minimalism/...

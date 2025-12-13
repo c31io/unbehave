@@ -1,6 +1,7 @@
 <script lang="ts">
 	import * as m from '$lib/paraglide/messages';
 	import { localizeHref } from '$lib/paraglide/runtime';
+	import LanguageSwitcher from './LanguageSwitcher.svelte';
 </script>
 
 <footer class="border-t border-gray-700 bg-gray-900/50 py-8">
@@ -32,6 +33,7 @@
 					</svg>
 					<span>{m.footer_view_source()}</span>
 				</a>
+				<LanguageSwitcher />
 			</div>
 
 			<div class="text-xs text-gray-500">

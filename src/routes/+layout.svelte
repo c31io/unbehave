@@ -4,7 +4,6 @@
 	import { appState } from '$lib/stores/app.svelte';
 	import { onMount } from 'svelte';
 	import Footer from '$lib/components/Footer.svelte';
-	import LanguageSwitcher from '$lib/components/LanguageSwitcher.svelte';
 	import * as m from '$lib/paraglide/messages';
 	import { localizeHref } from '$lib/paraglide/runtime';
 
@@ -77,11 +76,6 @@
 {/if}
 
 <div class="{showInstallBanner ? 'pt-[72px]' : ''}">
-	<!-- Global Language Switcher -->
-	<div class="fixed bottom-4 right-4 z-40">
-		<LanguageSwitcher />
-	</div>
-
 	{#if !appState.isInitialized}
 		<!-- Loading state -->
 		<div class="flex min-h-screen items-center justify-center bg-gradient-to-b from-gray-900 to-gray-800">
