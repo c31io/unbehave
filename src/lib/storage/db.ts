@@ -233,6 +233,98 @@ class Database {
 			request.onerror = () => reject(request.error);
 		});
 	}
+
+	async exportAllData(): Promise<string> {
+		const regrets = await this.getRegrets();
+		const temptations = await this.getTemptations();
+		const events = await this.getEvents();
+		const stats = await this.getStats();
+		const settings = await this.getSettings();
+
+		const exportData = {
+			version: DB_VERSION,
+			exportDate: new Date().toISOString(),
+			data: {
+				regrets,
+				temptations,
+				events,
+				stats,
+				settings
+			}
+		};
+
+		return JSON.stringify(exportData, null, 2);
+	}
+
+	async importAllData(jsonData: string, mode: 'merge' | 'replace' = 'merge'): Promise<void> {
+		const db = this.ensureDB();
+		const importData = JSON.parse(jsonData);
+
+		if (!importData.version || !importData.data) {
+			throw new Error('Invalid import file format');
+		}
+
+		if (mode === 'replace') {
+			await this.clearAllData();
+		}
+
+		const { regrets = [], temptations = [], events = [], stats, settings } = importData.data;
+
+		return new Promise((resolve, reject) => {
+			const transaction = db.transaction(
+				[STORES.REGRETS, STORES.TEMPTATIONS, STORES.EVENTS, STORES.STATS, STORES.SETTINGS],
+				'readwrite'
+			);
+
+			transaction.oncomplete = () => resolve();
+			transaction.onerror = () => reject(transaction.error);
+
+			const regretStore = transaction.objectStore(STORES.REGRETS);
+			const temptationStore = transaction.objectStore(STORES.TEMPTATIONS);
+			const eventStore = transaction.objectStore(STORES.EVENTS);
+			const statsStore = transaction.objectStore(STORES.STATS);
+			const settingsStore = transaction.objectStore(STORES.SETTINGS);
+
+			for (const regret of regrets) {
+				regretStore.put(regret);
+			}
+
+			for (const temptation of temptations) {
+				temptationStore.put(temptation);
+			}
+
+			for (const event of events) {
+				eventStore.put(event);
+			}
+
+			if (stats) {
+				statsStore.put({ id: 'main', ...stats });
+			}
+
+			if (settings) {
+				settingsStore.put({ id: 'main', ...settings });
+			}
+		});
+	}
+
+	async clearAllData(): Promise<void> {
+		const db = this.ensureDB();
+		return new Promise((resolve, reject) => {
+			const transaction = db.transaction(
+				[STORES.REGRETS, STORES.TEMPTATIONS, STORES.EVENTS, STORES.STATS, STORES.SETTINGS],
+				'readwrite'
+			);
+
+			transaction.oncomplete = () => resolve();
+			transaction.onerror = () => reject(transaction.error);
+
+			transaction.objectStore(STORES.REGRETS).clear();
+			transaction.objectStore(STORES.TEMPTATIONS).clear();
+			transaction.objectStore(STORES.EVENTS).clear();
+			transaction.objectStore(STORES.STATS).clear();
+			transaction.objectStore(STORES.SETTINGS).clear();
+		});
+	}
 }
 
 export const db = new Database();

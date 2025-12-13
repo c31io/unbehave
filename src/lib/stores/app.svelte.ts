@@ -72,6 +72,22 @@ class AppState {
 		await db.updateStats(newStats);
 		await this.loadData();
 	}
+
+	async exportData(): Promise<string> {
+		return await db.exportAllData();
+	}
+
+	async importData(jsonData: string, mode: 'merge' | 'replace' = 'merge'): Promise<void> {
+		await db.importAllData(jsonData, mode);
+		await this.loadData();
+	}
+
+	async clearAllData(): Promise<void> {
+		if (confirm('Are you sure you want to delete ALL data? This action cannot be undone.')) {
+			await db.clearAllData();
+			await this.loadData();
+		}
+	}
 }
 
 export const appState = new AppState();

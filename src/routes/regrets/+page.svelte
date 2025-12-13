@@ -7,9 +7,69 @@
 		[...appState.regrets].sort((a, b) => b.timestamp - a.timestamp)
 	);
 
+	let showImportModal = $state(false);
+	let importMode = $state<'merge' | 'replace'>('merge');
+
 	async function deleteRegret(id: string) {
 		if (confirm('Are you sure you want to delete this regret?')) {
 			await appState.deleteRegret(id);
+		}
+	}
+
+	async function exportData() {
+		try {
+			const jsonData = await appState.exportData();
+			const blob = new Blob([jsonData], { type: 'application/json' });
+			const url = URL.createObjectURL(blob);
+			const a = document.createElement('a');
+			a.href = url;
+			const date = new Date().toISOString().split('T')[0];
+			a.download = `unbehave-backup-${date}.json`;
+			a.click();
+			URL.revokeObjectURL(url);
+		} catch (error) {
+			alert('Failed to export data: ' + (error as Error).message);
+		}
+	}
+
+	function openImportDialog() {
+		showImportModal = true;
+	}
+
+	function closeImportModal() {
+		showImportModal = false;
+	}
+
+	function handleBackdropClick(event: MouseEvent) {
+		// Only close if clicking directly on the backdrop, not on modal content
+		if (event.target === event.currentTarget) {
+			closeImportModal();
+		}
+	}
+
+	function handleBackdropKeydown(event: KeyboardEvent) {
+		if (event.key === 'Enter' || event.key === ' ') {
+			event.preventDefault();
+			closeImportModal();
+		}
+	}
+
+	function handleFileSelect(event: Event) {
+		const target = event.target as HTMLInputElement;
+		const file = target.files?.[0];
+		if (file) {
+			const reader = new FileReader();
+			reader.onload = async (e) => {
+				try {
+					const jsonData = e.target?.result as string;
+					await appState.importData(jsonData, importMode);
+					showImportModal = false;
+					alert('Data imported successfully!');
+				} catch (error) {
+					alert('Failed to import data: ' + (error as Error).message);
+				}
+			};
+			reader.readAsText(file);
 		}
 	}
 </script>
@@ -27,12 +87,28 @@
 		<div class="mx-auto max-w-4xl">
 			<div class="mb-8 flex items-center justify-between">
 				<h1 class="text-4xl font-bold">My Regrets</h1>
-				<a
-					href="/regrets/new"
-					class="rounded-lg bg-blue-600 px-6 py-3 font-semibold hover:bg-blue-700"
-				>
-					Add New
-				</a>
+				<div class="flex gap-2">
+					<button
+						onclick={exportData}
+						class="rounded-lg border border-gray-600 px-4 py-2 text-sm font-semibold hover:bg-gray-800"
+						title="Export all data"
+					>
+						📥 Export
+					</button>
+					<button
+						onclick={openImportDialog}
+						class="rounded-lg border border-gray-600 px-4 py-2 text-sm font-semibold hover:bg-gray-800"
+						title="Import data from file"
+					>
+						📤 Import
+					</button>
+					<a
+						href="/regrets/new"
+						class="rounded-lg bg-blue-600 px-6 py-3 font-semibold hover:bg-blue-700"
+					>
+						Add New
+					</a>
+				</div>
 			</div>
 
 			{#if sortedRegrets.length === 0}
@@ -93,4 +169,74 @@
 			{/if}
 		</div>
 	</main>
+
+	{#if showImportModal}
+		<div
+			class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
+			onclick={handleBackdropClick}
+			onkeydown={handleBackdropKeydown}
+			role="button"
+			tabindex="0"
+			aria-label="Close import dialog"
+		>
+			<div
+				class="mx-4 w-full max-w-md rounded-lg border border-gray-700 bg-gray-900 p-6 shadow-xl"
+			>
+				<h2 class="mb-4 text-2xl font-bold">Import Data</h2>
+
+				<fieldset class="mb-6">
+					<legend class="mb-3 text-sm font-semibold text-gray-300">Import Mode</legend>
+					<div class="space-y-3">
+						<label class="flex cursor-pointer items-start gap-3 rounded-lg border border-gray-600 bg-gray-800 p-3 transition-colors hover:border-gray-500">
+							<input
+								type="radio"
+								name="importMode"
+								value="merge"
+								bind:group={importMode}
+								class="mt-1 h-4 w-4 border-gray-500 text-blue-600 focus:ring-2 focus:ring-blue-500"
+							/>
+							<div class="flex-1">
+								<div class="font-semibold">Merge</div>
+								<div class="text-sm text-gray-400">
+									Add imported data to existing data (recommended)
+								</div>
+							</div>
+						</label>
+
+						<label class="flex cursor-pointer items-start gap-3 rounded-lg border border-gray-600 bg-gray-800 p-3 transition-colors hover:border-gray-500">
+							<input
+								type="radio"
+								name="importMode"
+								value="replace"
+								bind:group={importMode}
+								class="mt-1 h-4 w-4 border-gray-500 text-blue-600 focus:ring-2 focus:ring-blue-500"
+							/>
+							<div class="flex-1">
+								<div class="font-semibold">Replace</div>
+								<div class="text-sm text-gray-400">
+									Delete all existing data and replace with imported data
+								</div>
+							</div>
+						</label>
+					</div>
+				</fieldset>
+
+				<input
+					type="file"
+					accept=".json"
+					onchange={handleFileSelect}
+					class="mb-4 w-full rounded-lg border border-gray-600 bg-gray-800 px-4 py-2 text-white file:mr-4 file:rounded file:border-0 file:bg-blue-600 file:px-4 file:py-2 file:text-white file:hover:bg-blue-700"
+				/>
+
+				<div class="flex gap-3">
+					<button
+						onclick={closeImportModal}
+						class="flex-1 rounded-lg border border-gray-600 px-4 py-2 font-semibold hover:bg-gray-800"
+					>
+						Cancel
+					</button>
+				</div>
+			</div>
+		</div>
+	{/if}
 </div>

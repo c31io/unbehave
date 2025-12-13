@@ -4,7 +4,6 @@ To not is to do.
 
 ## Todos
 
-- State import/export
 - i18n
 
 ## The philosophy
