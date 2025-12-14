@@ -87,9 +87,9 @@
 
 	<main class="container mx-auto px-4 py-12">
 		<div class="mx-auto max-w-4xl">
-			<div class="mb-8 flex items-center justify-between">
-				<h1 class="text-4xl font-bold">{m.regrets_page_title()}</h1>
-				<div class="flex gap-2">
+			<div class="mb-8">
+				<h1 class="mb-4 text-4xl font-bold">{m.regrets_page_title()}</h1>
+				<div class="flex flex-wrap gap-2 justify-end">
 					<button
 						onclick={exportData}
 						class="rounded-lg border border-gray-600 px-4 py-2 text-sm font-semibold hover:bg-gray-800"
