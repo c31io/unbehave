@@ -139,5 +139,10 @@
 	"addictions_page_description": "了解常见的成瘾类型、其机制以及基于证据的治疗方法。",
 	"addictions_select_prompt": "选择上面的成瘾类型以了解其治疗方法",
 	"addictions_tip_label": "提示：",
-	"addictions_tip_text": "在创建悔恨记录时，您可以选择此成瘾类型来访问快速治疗提示并跟踪该行为的特定模式。"
+	"addictions_tip_text": "在创建悔恨记录时，您可以选择此成瘾类型来访问快速治疗提示并跟踪该行为的特定模式。",
+	"stats_clear_button": "清除统计",
+	"stats_clear_confirm_title": "清除所有统计数据？",
+	"stats_clear_confirm_message": "这将删除所有事件并将您的统计数据重置为零。您的悔恨记录不会受到影响。此操作无法撤消。",
+	"stats_clear_confirm_button": "清除所有统计",
+	"stats_clear_cancel_button": "取消"
 }

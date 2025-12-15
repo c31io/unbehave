@@ -325,6 +325,29 @@ class Database {
 			transaction.objectStore(STORES.SETTINGS).clear();
 		});
 	}
+
+	async clearAllEvents(): Promise<void> {
+		const db = this.ensureDB();
+		return new Promise((resolve, reject) => {
+			const transaction = db.transaction([STORES.EVENTS, STORES.STATS], 'readwrite');
+
+			transaction.oncomplete = () => resolve();
+			transaction.onerror = () => reject(transaction.error);
+
+			// Clear all events
+			transaction.objectStore(STORES.EVENTS).clear();
+
+			// Reset stats to zero
+			const resetStats: UserStats = {
+				totalTemptations: 0,
+				totalResisted: 0,
+				totalGaveIn: 0,
+				streakDays: 0,
+				lastActivity: Date.now()
+			};
+			transaction.objectStore(STORES.STATS).put({ id: 'main', ...resetStats });
+		});
+	}
 }
 
 export const db = new Database();

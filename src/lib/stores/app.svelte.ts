@@ -88,6 +88,11 @@ class AppState {
 			await this.loadData();
 		}
 	}
+
+	async clearAllEvents(): Promise<void> {
+		await db.clearAllEvents();
+		await this.loadData();
+	}
 }
 
 export const appState = new AppState();

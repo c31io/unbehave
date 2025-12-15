@@ -139,5 +139,10 @@
 	"addictions_page_description": "Learn about common addictions, their mechanisms, and evidence-based treatment approaches.",
 	"addictions_select_prompt": "Select an addiction above to learn about its treatment approaches",
 	"addictions_tip_label": "Tip:",
-	"addictions_tip_text": "When creating a regret entry, you can select this addiction to access quick treatment tips and track patterns specific to this behavior."
+	"addictions_tip_text": "When creating a regret entry, you can select this addiction to access quick treatment tips and track patterns specific to this behavior.",
+	"stats_clear_button": "Clear Stats",
+	"stats_clear_confirm_title": "Clear All Statistics?",
+	"stats_clear_confirm_message": "This will delete all events and reset your statistics to zero. Your regrets will not be affected. This action cannot be undone.",
+	"stats_clear_confirm_button": "Clear All Stats",
+	"stats_clear_cancel_button": "Cancel"
 }
