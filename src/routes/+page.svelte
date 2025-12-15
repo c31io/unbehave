@@ -41,31 +41,31 @@
 				</a>
 			</div>
 
-			{#if appState.stats.totalTemptations > 0}
-				<div class="mt-12 rounded-lg bg-gray-800/50 p-6">
-					<h3 class="mb-4 text-2xl font-bold">{m.home_progress_title()}</h3>
-					<div class="grid grid-cols-3 gap-4">
-						<div>
-							<div class="text-3xl font-bold text-green-400">
-								{appState.stats.totalResisted}
-							</div>
-							<div class="text-gray-400">{m.home_times_resisted()}</div>
+			<div class="mt-12 rounded-lg bg-gray-800/50 p-6">
+				<h3 class="mb-4 text-2xl font-bold">{m.home_progress_title()}</h3>
+				<div class="grid grid-cols-3 gap-4">
+					<div>
+						<div class="text-3xl font-bold text-green-400">
+							{appState.stats.totalResisted}
 						</div>
-						<div>
-							<div class="text-3xl font-bold text-red-400">{appState.stats.totalGaveIn}</div>
-							<div class="text-gray-400">{m.home_times_gave_in()}</div>
+						<div class="text-gray-400">{m.home_times_resisted()}</div>
+					</div>
+					<div>
+						<div class="text-3xl font-bold text-red-400">{appState.stats.totalGaveIn}</div>
+						<div class="text-gray-400">{m.home_times_gave_in()}</div>
+					</div>
+					<div>
+						<div class="text-3xl font-bold text-blue-400">
+							{#if appState.stats.totalTemptations > 0}
+								{Math.round((appState.stats.totalResisted / appState.stats.totalTemptations) * 100)}%
+							{:else}
+								-
+							{/if}
 						</div>
-						<div>
-							<div class="text-3xl font-bold text-blue-400">
-								{appState.stats.totalTemptations > 0
-									? Math.round((appState.stats.totalResisted / appState.stats.totalTemptations) * 100)
-									: 0}%
-							</div>
-							<div class="text-gray-400">{m.home_success_rate()}</div>
-						</div>
+						<div class="text-gray-400">{m.home_success_rate()}</div>
 					</div>
 				</div>
-			{/if}
+			</div>
 		</div>
 	</main>
 </div>
